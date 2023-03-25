@@ -23,7 +23,7 @@ export default function MyNavigator() {
         <Screen
           name="DayParcelList"
           component={DayParcelList}
-          options={({ route }) => ({
+          options={({ route }: any) => ({
             title: 'Parcel List ' + route.params.day,
             headerBackTitleVisible: false
           })}
@@ -31,7 +31,7 @@ export default function MyNavigator() {
         <Screen
           name="CarrierParcelList"
           component={CarrierParcelList}
-          options={({ route }) => ({
+          options={({ route }: any) => ({
             title: route.params.carrierId + ' Parcel List',
             headerBackTitleVisible: false
           })}
