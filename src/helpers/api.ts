@@ -1,11 +1,12 @@
-type parcel = {
+interface parcel {
     "id": { "$oid": string },
     "deliveryAdress": string
     "deliveryDate": string,
     "pickupAdress": string,
     "pickupDate": string,
     "itemsCount": number,
-    "items": [{ "$oid": string }]
+    "items": [{ "$oid": string }],
+    "delivered": boolean
 }
 
 const getAllParcels = async () => {
@@ -20,20 +21,24 @@ const getAllParcels = async () => {
   }
 };
 
-const getParcelsByPickupDate = async () => {
+const getParcelsByDeliveryDate = async () => {
   try {
     const parcels = await getAllParcels();
     const parcelsByDays = {} as any;
 
     parcels.forEach((parcel: parcel) => {
-      if (parcelsByDays[parcel.pickupDate]?.carriesCount > 0) {
-        parcelsByDays[parcel.pickupDate].itemsCount += parcel.itemsCount;
-        parcelsByDays[parcel.pickupDate].carriesCount += 1;
+      parcel = { ...parcel, delivered: false }
+      if (parcelsByDays[parcel.deliveryDate]?.carriesCount > 0) {
+        parcelsByDays[parcel.deliveryDate].itemsCount += parcel.itemsCount;
+        parcelsByDays[parcel.deliveryDate].carriesCount += 1;
+        parcelsByDays[parcel.deliveryDate].parcels.push(parcel)
       } else {
-        parcelsByDays[parcel.pickupDate] = {
+        parcelsByDays[parcel.deliveryDate] = {
           itemsCount: parcel.itemsCount,
+          deliveryDate: parcel.deliveryDate,
           pickupDate: parcel.pickupDate,
-          carriesCount: 1
+          carriesCount: 1,
+          parcels: [parcel]
         };
       }
     })
@@ -44,4 +49,4 @@ const getParcelsByPickupDate = async () => {
   }
 }
 
-export { getAllParcels, getParcelsByPickupDate }
+export { getAllParcels, getParcelsByDeliveryDate }

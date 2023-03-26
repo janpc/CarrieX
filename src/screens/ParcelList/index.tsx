@@ -22,6 +22,7 @@ export default function ParcelList({ navigation } : Props) {
           <ParcelListItem
             key={item.pickupDate}
             pickupDate={item.pickupDate}
+            deliveryDate={item.deliveryDate}
             itemsCount={item.itemsCount}
             carriesCount={item.carriesCount}
             navigation={navigation}

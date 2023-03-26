@@ -9,14 +9,14 @@ type dilyParcelsInfo = {
 }
 
 interface ParcelsState {
-  parcelsByPickupDate: {},
+  parcelsByDeliveryDate: {},
   parcelsArray: dilyParcelsInfo[],
   loaded: boolean,
   loading: boolean
 }
 
 const initialState: ParcelsState = {
-  parcelsByPickupDate: {},
+  parcelsByDeliveryDate: {},
   parcelsArray: [],
   loaded: false,
   loading: false
@@ -26,8 +26,8 @@ export const parcelsSlice = createSlice({
   name: 'parcels',
   initialState,
   reducers: {
-    setParcelsByPickupDate: (state, action: PayloadAction<{}>) => {
-      state.parcelsByPickupDate = action.payload
+    setParcelsByDeliveryDate: (state, action: PayloadAction<{}>) => {
+      state.parcelsByDeliveryDate = action.payload
     },
     setParcelsArray: (state, action: PayloadAction<[]>) => {
       state.parcelsArray = action.payload
@@ -42,7 +42,7 @@ export const parcelsSlice = createSlice({
   },
 })
 
-export const { setParcelsByPickupDate, setParcelsArray, setLoaded, setLoading } = parcelsSlice.actions
+export const { setParcelsByDeliveryDate, setParcelsArray, setLoaded, setLoading } = parcelsSlice.actions
 export const selectParcels = (state: RootState) => state.parcels.value
 
 export default parcelsSlice.reducer

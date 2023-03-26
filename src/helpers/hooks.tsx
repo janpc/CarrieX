@@ -1,19 +1,20 @@
 import { useEffect } from 'react'
 import type { RootState } from '../redux/store'
 import { useSelector, useDispatch } from 'react-redux'
-import { setParcelsByPickupDate, setParcelsArray, setLoading, setLoaded } from '../redux/parcelsSlice'
-import { getParcelsByPickupDate } from './api'
+import { setParcelsByDeliveryDate, setParcelsArray, setLoading, setLoaded } from '../redux/parcelsSlice'
+import { getParcelsByDeliveryDate } from './api'
 
 type dilyParcelsInfo = {
   "itemsCount": number,
   "pickupDate": string,
-  "carriesCount": number
+  "carriesCount": number,
+  "deliveryDate": string
 }
 
 export const useGlobalState = () => {
   const {
     parcelsArray,
-    parcelsByPickupDate,
+    parcelsByDeliveryDate,
     loaded,
     loading
   } = useSelector((state: RootState) => state.reducer)
@@ -23,8 +24,8 @@ export const useGlobalState = () => {
   useEffect(() => {
     if (!loaded) {
       dispatch(setLoading(true))
-      getParcelsByPickupDate().then(response => {
-        dispatch(setParcelsByPickupDate(response))
+      getParcelsByDeliveryDate().then(response => {
+        dispatch(setParcelsByDeliveryDate(response))
       })
       dispatch(setLoading(false))
       dispatch(setLoaded(true))
@@ -32,20 +33,20 @@ export const useGlobalState = () => {
   }, [])
 
   useEffect(() => {
-    if (loaded && Object.entries(parcelsByPickupDate).length > 0) {
-      const responseArray: dilyParcelsInfo[] = Object.values(parcelsByPickupDate)
+    if (loaded && Object.entries(parcelsByDeliveryDate).length > 0) {
+      const responseArray: dilyParcelsInfo[] = Object.values(parcelsByDeliveryDate)
       const responseArrayOrdered: dilyParcelsInfo[] = responseArray.sort(
         (a: dilyParcelsInfo, b: dilyParcelsInfo) => {
-          const DateA = new Date(a.pickupDate)
-          const DateB = new Date(b.pickupDate)
+          const DateA = new Date(a.deliveryDate)
+          const DateB = new Date(b.deliveryDate)
 
           return DateA.getTime() - DateB.getTime()
         })
         dispatch(setParcelsArray(responseArrayOrdered))
     }
-  }, [loaded, parcelsByPickupDate])
+  }, [loaded, parcelsByDeliveryDate])
 
 
-  return { parcelsByPickupDate, parcelsArray, loading }
+  return { parcelsByDeliveryDate, parcelsArray, loading }
 
 }
