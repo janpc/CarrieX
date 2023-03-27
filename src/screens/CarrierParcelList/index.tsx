@@ -13,7 +13,7 @@ export default function CarrierParcelList( { route }: Props) {
 		<View style={styles.container}>
 			<FlatList
         data={parcelsById[route.params.parcelId].items}
-				keyExtractor={item => item.$oid}
+				keyExtractor={(item, index) => item.$oid + index}
         renderItem ={ ({item}: any) => <CarrierListItem id={item.$oid} />}
       />
 		</View>

@@ -13,6 +13,7 @@ interface ParcelsState {
   parcelsByDeliveryDate: {},
   parcelsArray: dailyParcelsInfo[],
   items: [],
+  carriers: [],
   loaded: boolean,
   loading: boolean
 }
@@ -22,6 +23,7 @@ const initialState: ParcelsState = {
   parcelsByDeliveryDate: {},
   parcelsArray: [],
   items: [],
+  carriers: [],
   loaded: false,
   loading: false
 }
@@ -49,10 +51,21 @@ export const parcelsSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
+    setCarriers: (state, action: PayloadAction<[]>) => {
+      state.carriers = action.payload
+    },
   },
 })
 
-export const { setParcelsById, setParcelsByDeliveryDate, setParcelsArray, setLoaded, setLoading, setItems } = parcelsSlice.actions
+export const {
+  setParcelsById,
+  setParcelsByDeliveryDate,
+  setParcelsArray,
+  setLoaded,
+  setLoading,
+  setItems,
+  setCarriers
+} = parcelsSlice.actions
 export const selectParcels = (state: RootState) => state.parcels.value
 
 export default parcelsSlice.reducer

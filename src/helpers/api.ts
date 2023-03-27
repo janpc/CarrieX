@@ -41,7 +41,7 @@ const getAllParcels = async () => {
   }
 };
 
-const getAllCarriers = async () => {
+const getAllCarriers = () => {
   return carriers;
 };
 

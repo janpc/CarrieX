@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { View, FlatList, Text, TouchableOpacity } from "react-native";
 import { SvgXml } from 'react-native-svg';
 import styles from "./styles";
@@ -5,8 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ParcelListItem from '../../components/ParcelListItem';
 import { useGlobalState } from '../../helpers/hooks';
 import add from "../../icons/add";
-import GenericBottomModal from "../../components/GenericBottomModal";
-import { useState } from "react";
+import AddParcelModal from "../../components/AddParcelParcel";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParcelList", 'MyRouter'>;
 
@@ -41,13 +41,10 @@ export default function ParcelList({ navigation } : Props) {
           <SvgXml xml={add}/>
         </TouchableOpacity>
       </View>
-      <GenericBottomModal
+      <AddParcelModal
         visible={modalVisible}
         close={()=>setModalVisible(false)}
-        title="Parcel and carrier information"
-      >
-        <Text>hola</Text>
-      </GenericBottomModal>
+      />
 		</View>
 	);
 }
