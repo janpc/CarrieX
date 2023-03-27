@@ -128,8 +128,6 @@ export const useGlobalState = () => {
     const parcel = parcelsById[id];
     const carrier = parcel.carrier;
 
-    console.log(carrier.driver, carrier.licensePlate);
-
     if (carrier.driver == name && carrier.licensePlate == license) {
       return true;
     }
