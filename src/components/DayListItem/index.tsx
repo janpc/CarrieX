@@ -1,7 +1,5 @@
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import styles from "./styles";
-import truckSvg from "../../icons/truck";
-import { SvgXml } from 'react-native-svg';
 
 type Props = {
   "navigation": any,
@@ -16,7 +14,7 @@ export default function DayListItem({navigation, itemsCount, id, companyName, de
 	return (
 		<TouchableOpacity
       onPress={() =>
-        navigation.navigate('CarrierParcelList', {carrierId: id})
+        navigation.navigate('CarrierParcelList', {parcelId: id})
       }
       style={styles.container}
     >

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import type { RootState } from '../redux/store'
 import { useSelector, useDispatch } from 'react-redux'
-import { setParcelsByDeliveryDate, setParcelsArray, setLoading, setLoaded } from '../redux/parcelsSlice'
-import { getParcelsByDeliveryDate } from './api'
+import { setParcelsByDeliveryDate, setParcelsArray, setLoading, setLoaded, setParcelsById, setItems } from '../redux/parcelsSlice'
+import { getParcelsById, getParcelsByDeliveryDate, getItems } from './api'
 
 type dilyParcelsInfo = {
   "itemsCount": number,
@@ -13,10 +13,12 @@ type dilyParcelsInfo = {
 
 export const useGlobalState = () => {
   const {
+    parcelsById,
     parcelsArray,
     parcelsByDeliveryDate,
     loaded,
-    loading
+    loading,
+    items
   } = useSelector((state: RootState) => state.reducer)
 
   const dispatch = useDispatch()
@@ -24,9 +26,11 @@ export const useGlobalState = () => {
   useEffect(() => {
     if (!loaded) {
       dispatch(setLoading(true))
+      getParcelsById().then(response => dispatch(setParcelsById(response)))
       getParcelsByDeliveryDate().then(response => {
         dispatch(setParcelsByDeliveryDate(response))
       })
+      getItems().then(response => dispatch(setItems(response)))
       dispatch(setLoading(false))
       dispatch(setLoaded(true))
     }
@@ -47,6 +51,6 @@ export const useGlobalState = () => {
   }, [loaded, parcelsByDeliveryDate])
 
 
-  return { parcelsByDeliveryDate, parcelsArray, loading }
+  return { parcelsById, parcelsByDeliveryDate, parcelsArray, loading, items }
 
 }

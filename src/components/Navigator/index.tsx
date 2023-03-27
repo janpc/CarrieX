@@ -32,7 +32,7 @@ export default function MyNavigator() {
           name="CarrierParcelList"
           component={CarrierParcelList}
           options={({ route }: any) => ({
-            title: route.params.carrierId + ' Parcel List',
+            title: route.params.parcelId + ' Parcel List',
             headerBackTitleVisible: false
           })}
         />

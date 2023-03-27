@@ -21,6 +21,14 @@ interface Carrier {
   "centerAdress": string
 }
 
+interface Item {
+  "id": {"$oid": string},
+  "type": string,
+  "model": string,
+  "price": number,
+  "weigth": number
+}
+
 const getAllParcels = async () => {
   try {
     const response = await fetch(
@@ -47,26 +55,60 @@ const getParcelsByDeliveryDate = async () => {
   }
 }
 
+const getParcelsById = async () => {
+  try {
+    const parcels = await getAllParcels();
+    const orderedParcels = orderParcelsById(parcels);
+    return orderedParcels;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const getItems = async () => {
+  try {
+    const response = await fetch(
+      'https://challenges-asset-files.s3.us-east-2.amazonaws.com/Events/Media+Markt/Challenges/items_mm.json',
+    );
+    const items = await response.json();
+
+    const orderedItems = orderItemsById(items)
+    return orderedItems;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const orderParcelsByDays = (parcels: Parcel[]): Parcel[] => {
   const parcelsByDays = {} as any;
-    parcels.forEach((parcel: Parcel) => {
-      parcel = setCarrierToParcel(parcel);
-      if (parcelsByDays[parcel.deliveryDate]?.carriesCount > 0) {
-        parcelsByDays[parcel.deliveryDate].itemsCount += parcel.itemsCount;
-        parcelsByDays[parcel.deliveryDate].carriesCount += 1;
-        parcelsByDays[parcel.deliveryDate].parcels.push(parcel)
-      } else {
-        parcelsByDays[parcel.deliveryDate] = {
-          itemsCount: parcel.itemsCount,
-          deliveryDate: parcel.deliveryDate,
-          pickupDate: parcel.pickupDate,
-          carriesCount: 1,
-          parcels: [parcel]
-        };
-      }
-    })
+  parcels.forEach((parcel: Parcel) => {
+    parcel = setCarrierToParcel(parcel);
+    if (parcelsByDays[parcel.deliveryDate]?.carriesCount > 0) {
+      parcelsByDays[parcel.deliveryDate].itemsCount += parcel.itemsCount;
+      parcelsByDays[parcel.deliveryDate].carriesCount += 1;
+      parcelsByDays[parcel.deliveryDate].parcels.push(parcel)
+    } else {
+      parcelsByDays[parcel.deliveryDate] = {
+        itemsCount: parcel.itemsCount,
+        deliveryDate: parcel.deliveryDate,
+        pickupDate: parcel.pickupDate,
+        carriesCount: 1,
+        parcels: [parcel]
+      };
+    }
+  })
 
-    return parcelsByDays;
+  return parcelsByDays;
+}
+
+const orderParcelsById = (parcels: Parcel[]): Parcel[] => {
+  const parcelsById = {} as any;
+  parcels.forEach((parcel: Parcel) => {
+    parcel = setCarrierToParcel(parcel);
+    parcelsById[parcel.id.$oid] = parcel
+  })
+
+  return parcelsById;
 }
 
 //As I have not found any relation between carriers and parcels, I assign them randomly.
@@ -77,4 +119,13 @@ const setCarrierToParcel = (parcel: Parcel): Parcel => {
   return parcel
 }
 
-export { getAllParcels, getParcelsByDeliveryDate, getAllCarriers }
+const orderItemsById = (items: Item[]): Item[] => {
+  const itemsById = {} as any;
+  items.forEach((item: Item) => {
+    itemsById[item.id.$oid] = item
+  })
+
+  return itemsById;
+}
+
+export { getParcelsByDeliveryDate, getAllCarriers, getParcelsById, getItems }
