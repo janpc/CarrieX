@@ -9,6 +9,7 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginTop: 50,
     marginBottom: 15,
+    width:'100%'
   },
   text: {
     color: 'white',

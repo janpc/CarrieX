@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View, } from 'react-native';
-import { getIds } from '../../helpers/converters';
+import { Text, Image, View, } from 'react-native';
 import { useGlobalState } from '../../helpers/hooks';
 import BaseButton from '../BaseButton';
 import BaseInput from '../BaseInput';
-import BasePicker from '../BasePicker';
+import BaseModal from '../BaseModal';
 import GenericBottomModal from '../GenericBottomModal';
 import styles from './styles'
 
@@ -21,6 +20,8 @@ export default function DeliverParcelModal({ visible, close, id, navigation}: Pr
   const [license, setLicense] = useState<string>('')
   const [ licenseError, setLicenseError] = useState<boolean>(false)
   const [ nameError, setNameError] = useState<boolean>(false)
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false)
 
   useEffect(() => {
     setNameError(false)
@@ -35,7 +36,7 @@ export default function DeliverParcelModal({ visible, close, id, navigation}: Pr
     }
   }, [visible])
 
-  const handleAddParcel = () => {
+  const handleDeliverParcel = () => {
     if (name === '') {
       setNameError(true)
       return
@@ -47,20 +48,26 @@ export default function DeliverParcelModal({ visible, close, id, navigation}: Pr
     }
 
     const correct = deliverParcel(id, name, license)
-    console.log(correct);
 
     setName('')
     setLicense('')
     close();
 
     if(correct) {
-      navigation.navigate('ParcelList')
+      setShowSuccessModal(true);
+    } else {
+      setShowErrorModal(true);
     }
+  }
 
+  const goToParcelList = () => {
+    setShowSuccessModal(true);
+    navigation.navigate('ParcelList');
   }
 
 	return (
-		<GenericBottomModal
+    <>
+      <GenericBottomModal
         visible={visible}
         close={close}
         title="Delivery information"
@@ -78,9 +85,24 @@ export default function DeliverParcelModal({ visible, close, id, navigation}: Pr
             onChange={(value: string) => setLicense(value)}
             error={licenseError}
           />
-          <BaseButton text="NEXT" onClick={() => handleAddParcel()}/>
+          <BaseButton text="NEXT" onClick={() => handleDeliverParcel()}/>
         </View>
       </GenericBottomModal>
+      <BaseModal visible={showSuccessModal} close={()=>{}}>
+        <View style={styles.modalInfo}>
+          <Image source={require('../../icons/success.png')} />
+          <Text style={styles.text}>Parcel successfully delivered to the carrier</Text>
+          <BaseButton text="GO TO PARCEL LIST" onClick={goToParcelList}/>
+        </View>
+      </BaseModal>
+      <BaseModal visible={showErrorModal} close={()=>{}}>
+        <View style={styles.modalInfo}>
+          <Image source={require('../../icons/error.png')} />
+          <Text style={styles.text}>Some information is wrong</Text>
+          <BaseButton text="BACK" onClick={() => {setShowErrorModal(false)}}/>
+        </View>
+      </BaseModal>
+    </>
 	);
 }
 
