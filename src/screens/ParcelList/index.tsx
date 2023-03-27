@@ -5,12 +5,15 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ParcelListItem from '../../components/ParcelListItem';
 import { useGlobalState } from '../../helpers/hooks';
 import add from "../../icons/add";
+import GenericBottomModal from "../../components/GenericBottomModal";
+import { useState } from "react";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParcelList", 'MyRouter'>;
 
 
 export default function ParcelList({ navigation } : Props) {
   const { parcelsArray, loading } = useGlobalState();
+  const [ modalVisible, setModalVisible ] = useState(false)
 
   if(loading) {
     return <Text>Loading...</Text>
@@ -31,10 +34,20 @@ export default function ParcelList({ navigation } : Props) {
           />}
       />
       <View style={styles.addContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(true)
+          }}>
           <SvgXml xml={add}/>
         </TouchableOpacity>
       </View>
+      <GenericBottomModal
+        visible={modalVisible}
+        close={()=>setModalVisible(false)}
+        title="Parcel and carrier information"
+      >
+        <Text>hola</Text>
+      </GenericBottomModal>
 		</View>
 	);
 }
