@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View, } from 'react-native';
 import { getIds } from '../../helpers/converters';
 import { useGlobalState } from '../../helpers/hooks';
+import BaseButton from '../BaseButton';
 import BaseInput from '../BaseInput';
 import BasePicker from '../BasePicker';
 import GenericBottomModal from '../GenericBottomModal';
@@ -64,13 +65,7 @@ export default function AddParcelModal({ visible, close}: Props) {
             value={carrierId}
             onChange={(value: string) => setCarrierId(value)}
           />
-          <TouchableOpacity
-            onPress={() => handleAddParcel()}
-            style={styles.addButton}
-            accessibilityLabel="Add parcel and carrier information"
-          >
-            <Text style={styles.addText}>ADD</Text>
-          </TouchableOpacity>
+          <BaseButton text="ADD" onClick={() => handleAddParcel()}/>
         </View>
       </GenericBottomModal>
 	);
