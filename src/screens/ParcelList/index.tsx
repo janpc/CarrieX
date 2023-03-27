@@ -1,8 +1,10 @@
-import { View, FlatList, Text } from "react-native";
+import { View, FlatList, Text, TouchableOpacity } from "react-native";
+import { SvgXml } from 'react-native-svg';
 import styles from "./styles";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ParcelListItem from '../../components/ParcelListItem';
 import { useGlobalState } from '../../helpers/hooks';
+import add from "../../icons/add";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParcelList", 'MyRouter'>;
 
@@ -28,6 +30,11 @@ export default function ParcelList({ navigation } : Props) {
             navigation={navigation}
           />}
       />
+      <View style={styles.addContainer}>
+        <TouchableOpacity>
+          <SvgXml xml={add}/>
+        </TouchableOpacity>
+      </View>
 		</View>
 	);
 }
