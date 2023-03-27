@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './store'
+import { orderParcelsByDays } from '../helpers/converters'
 
 type dailyParcelsInfo = {
   "itemsCount": number,
@@ -54,6 +55,17 @@ export const parcelsSlice = createSlice({
     setCarriers: (state, action: PayloadAction<[]>) => {
       state.carriers = action.payload
     },
+    setDelivered: (state, action: PayloadAction<string>) => {
+      const id = action.payload
+      const byId = {...state.parcelsById};
+
+      byId[id] = {...byId[id], delivered: true};
+
+      const byDate = orderParcelsByDays(Object.values(byId), state.carriers)
+
+      state.parcelsById = byId;
+      state.parcelsByDeliveryDate = byDate;
+    }
   },
 })
 
@@ -64,7 +76,8 @@ export const {
   setLoaded,
   setLoading,
   setItems,
-  setCarriers
+  setCarriers,
+  setDelivered
 } = parcelsSlice.actions
 export const selectParcels = (state: RootState) => state.parcels.value
 

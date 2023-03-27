@@ -1,4 +1,4 @@
-import { Text, View, FlatList } from "react-native";
+import { Text, View, FlatList, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useGlobalState } from '../../helpers/hooks';

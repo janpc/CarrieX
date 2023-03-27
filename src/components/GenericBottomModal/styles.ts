@@ -25,11 +25,13 @@ export default StyleSheet.create({
     backgroundColor:'white',
     borderBottomColor: 'rgba(58, 53, 65, 0.12)',
     borderBottomWidth: 1,
+    marginBottom: 30,
+    justifyContent: 'center',
   },
   headerText: {
     color: 'black',
     fontSize: 18,
-    padding: 26,
+    padding: 10,
   },
   footer: {
     flex: 1,

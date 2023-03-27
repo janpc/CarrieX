@@ -6,7 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ParcelListItem from '../../components/ParcelListItem';
 import { useGlobalState } from '../../helpers/hooks';
 import add from "../../icons/add";
-import AddParcelModal from "../../components/AddParcelParcel";
+import AddParcelModal from "../../components/AddParcelModal";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ParcelList", 'MyRouter'>;
 

@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import type { RootState } from '../redux/store'
 import { useSelector, useDispatch } from 'react-redux'
-import { setParcelsByDeliveryDate, setParcelsArray, setLoading, setLoaded, setParcelsById, setItems, setCarriers } from '../redux/parcelsSlice'
+import { setParcelsByDeliveryDate, setParcelsArray, setLoading, setLoaded, setParcelsById, setItems, setCarriers, setDelivered } from '../redux/parcelsSlice'
 import { getParcelsById, getParcelsByDeliveryDate, getItems, getAllCarriers } from './api'
-import { formatDate } from './converters'
+import { formatDate, orderParcelsByDays } from './converters'
 
 type dilyParcelsInfo = {
   "itemsCount": number,
@@ -119,7 +119,21 @@ export const useGlobalState = () => {
     return { pickup, delivery}
   }
 
+  const deliverParcel = ( id: string, name: string, license: string) => {
+    const parcel = parcelsById[id];
+    const carrier = parcel.carrier;
 
-  return { parcelsById, parcelsByDeliveryDate, parcelsArray, loading, items, carriers, addParcel }
+    console.log(carrier.driver, carrier.licensePlate);
+    
+
+    if (carrier.driver == name && carrier.licensePlate == license) {
+      dispatch(setDelivered(id));
+      return true;
+    }
+
+    return false
+  }
+
+  return { parcelsById, parcelsByDeliveryDate, parcelsArray, loading, items, carriers, addParcel, deliverParcel }
 
 }

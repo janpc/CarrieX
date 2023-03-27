@@ -7,4 +7,11 @@ export default StyleSheet.create({
 		paddingTop: 12,
 		backgroundColor: "#fff",
 	},
+	deliveryContainer: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		bottom: 40,
+		paddingHorizontal: 20,
+	}
 });
