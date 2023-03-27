@@ -119,18 +119,24 @@ export const useGlobalState = () => {
     return { pickup, delivery}
   }
 
-  const deliverParcel = ( id: string, name: string, license: string) => {
+  const deliverParcel = ( id: string) => {
+    dispatch(setDelivered(id));
+
+  }
+
+  const isDriverInfoCorrect = ( id: string, name: string, license: string) => {
     const parcel = parcelsById[id];
     const carrier = parcel.carrier;
 
+    console.log(carrier.driver, carrier.licensePlate);
+
     if (carrier.driver == name && carrier.licensePlate == license) {
-      dispatch(setDelivered(id));
       return true;
     }
 
     return false
   }
 
-  return { parcelsById, parcelsByDeliveryDate, parcelsArray, loading, items, carriers, addParcel, deliverParcel }
+  return { parcelsById, parcelsByDeliveryDate, parcelsArray, loading, items, carriers, addParcel, deliverParcel, isDriverInfoCorrect }
 
 }

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Text, Image, View, } from 'react-native';
+import { View, } from 'react-native';
 import { useGlobalState } from '../../helpers/hooks';
 import BaseButton from '../BaseButton';
 import BaseInput from '../BaseInput';
-import BaseModal from '../BaseModal';
+import ErrorModal from '../ErrorModal';
 import GenericBottomModal from '../GenericBottomModal';
-import styles from './styles'
+import SignerModal from '../SignerModal';
+import SuccessModal from '../SuccessModal';
 
 type Props = {
   "visible": boolean,
@@ -15,13 +16,14 @@ type Props = {
 }
 
 export default function DeliverParcelModal({ visible, close, id, navigation}: Props) {
-  const { deliverParcel } = useGlobalState();
+  const { deliverParcel, isDriverInfoCorrect } = useGlobalState();
   const [name, setName] = useState<string>('')
   const [license, setLicense] = useState<string>('')
   const [ licenseError, setLicenseError] = useState<boolean>(false)
   const [ nameError, setNameError] = useState<boolean>(false)
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false)
+  const [showSignatureModal, setShowSignatureModal] = useState<boolean>(false)
 
   useEffect(() => {
     setNameError(false)
@@ -47,22 +49,28 @@ export default function DeliverParcelModal({ visible, close, id, navigation}: Pr
       return
     }
 
-    const correct = deliverParcel(id, name, license)
+    const correct = isDriverInfoCorrect(id, name, license)
 
     setName('')
     setLicense('')
     close();
 
     if(correct) {
-      setShowSuccessModal(true);
+      setShowSignatureModal(true);
     } else {
       setShowErrorModal(true);
     }
   }
 
-  const goToParcelList = () => {
+  const handleSucces= () => {
+    setShowSignatureModal(false);
+    deliverParcel(id)
     setShowSuccessModal(true);
-    navigation.navigate('ParcelList');
+  }
+
+  const handleError= () => {
+    setShowSignatureModal(false);
+    setShowErrorModal(true);
   }
 
 	return (
@@ -77,31 +85,28 @@ export default function DeliverParcelModal({ visible, close, id, navigation}: Pr
             label="Driver’s name"
             value={name}
             onChange={(value: string) => setName(value)}
-            error={nameError}
-          />
+            error={nameError} />
           <BaseInput
             label="License plate"
             value={license}
             onChange={(value: string) => setLicense(value)}
-            error={licenseError}
-          />
-          <BaseButton text="NEXT" onClick={() => handleDeliverParcel()}/>
+            error={licenseError} />
+          <BaseButton text="NEXT" onClick={() => handleDeliverParcel()} />
         </View>
       </GenericBottomModal>
-      <BaseModal visible={showSuccessModal} close={()=>{}}>
-        <View style={styles.modalInfo}>
-          <Image source={require('../../icons/success.png')} />
-          <Text style={styles.text}>Parcel successfully delivered to the carrier</Text>
-          <BaseButton text="GO TO PARCEL LIST" onClick={goToParcelList}/>
-        </View>
-      </BaseModal>
-      <BaseModal visible={showErrorModal} close={()=>{}}>
-        <View style={styles.modalInfo}>
-          <Image source={require('../../icons/error.png')} />
-          <Text style={styles.text}>Some information is wrong</Text>
-          <BaseButton text="BACK" onClick={() => {setShowErrorModal(false)}}/>
-        </View>
-      </BaseModal>
+      <SuccessModal
+        visible={showSuccessModal}
+        goToParcelList={() => navigation.navigate('ParcelList')}
+      />
+      <ErrorModal
+        visible={showErrorModal}
+        close={() => { setShowErrorModal(false); }}
+      />
+      <SignerModal
+        visible={showSignatureModal}
+        save={ handleSucces }
+        close = {handleError}
+      />
     </>
 	);
 }
